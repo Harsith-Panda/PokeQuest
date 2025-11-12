@@ -8,7 +8,6 @@
 ## 🚀 Table of Contents
 - [Overview](#-overview)
 - [Features](#-features)
-- [System Architecture](#-system-architecture)
 - [Tech Stack](#-tech-stack)
 - [API Endpoints](#-api-endpoints)
 - [Database Design](#-database-design)
@@ -17,7 +16,6 @@
 - [Search, Sorting, Filtering & Pagination](#-search-sorting-filtering--pagination)
 - [Future Enhancements](#-future-enhancements)
 - [Contributing](#-contributing)
-- [License](#-license)
 - [Contact](#-contact)
 
 ---
