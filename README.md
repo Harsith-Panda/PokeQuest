@@ -11,7 +11,6 @@
 - [Tech Stack](#-tech-stack)
 - [API Endpoints](#-api-endpoints)
 - [Database Design](#-database-design)
-- [Installation & Setup](#-installation--setup)
 - [Usage Flow](#-usage-flow)
 - [Search, Sorting, Filtering & Pagination](#-search-sorting-filtering--pagination)
 - [Future Enhancements](#-future-enhancements)
