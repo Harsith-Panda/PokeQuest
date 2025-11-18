@@ -38,7 +38,7 @@ type userActions = {
 
 export type userSlice = {
   loading: boolean;
-  user: UserState | null | undefined;
+  user: UserState | null;
 } & userActions;
 
 export const createUserSlice: StateCreator<
@@ -48,7 +48,7 @@ export const createUserSlice: StateCreator<
   userSlice
 > = immer((set) => ({
   loading: false,
-  user: undefined,
+  user: null,
   logout: async () => {
     await api.post("/api/auth/logout");
     return set({ user: null });
