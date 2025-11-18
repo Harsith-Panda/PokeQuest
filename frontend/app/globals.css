@@ -1,0 +1,216 @@
+@import "tailwindcss";
+
+@layer utilities {
+    .font-logo {
+        font-family: var(--font-p2p);
+    }
+    .font-body {
+        font-family: var(--font-inter);
+    }
+    .font-accents {
+        font-family: var(--font-kanit);
+    }
+    .font-accents-secondary {
+        font-family: var(--font-orbitron);
+    }
+}
+
+@theme {
+    /* Backgrounds */
+    --color-bg: #e3f2fd;
+    --color-surface: #ffffff;
+    --color-hover: #bbdefb;
+
+    /* Text Colors */
+    --color-text-primary: #1a237e;
+    --color-text-secondary: #5c6bc0;
+
+    /* Borders */
+    --color-border: #90caf9;
+
+    /* Accent Colors */
+    --color-accent: #00e676;
+    --color-accent-secondary: #2979ff;
+    --color-accent-tertiary: #ffd600;
+    --color-accent-red: #ff1744;
+
+    /* Pokemon Type Colors */
+    --color-fire: #ff6f00;
+    --color-water: #0091ea;
+    --color-grass: #64dd17;
+    --color-electric: #ffd600;
+    --color-psychic: #d500f9;
+    --color-fighting: #d84315;
+
+    /* State Colors */
+    --color-error: #ff1744;
+    --color-success: #00e676;
+    --color-warning: #ffab00;
+    --color-info: #2979ff;
+
+    /* Effects */
+    --color-shadow: rgba(25, 118, 210, 0.15);
+    --color-glow: rgba(0, 230, 118, 0.3);
+}
+
+.dark {
+    /* Backgrounds */
+    --color-bg: #0a1929;
+    --color-surface: #1a2332;
+    --color-hover: #243447;
+
+    /* Text Colors */
+    --color-text-primary: #e3f2fd;
+    --color-text-secondary: #90caf9;
+
+    /* Borders */
+    --color-border: #1e3a5f;
+
+    /* Accent Colors (Brighter for dark mode) */
+    --color-accent: #00ff9f;
+    --color-accent-secondary: #448aff;
+    --color-accent-tertiary: #ffea00;
+    --color-accent-red: #ff5252;
+
+    /* Pokemon Type Colors (Enhanced for dark) */
+    --color-fire: #ff9100;
+    --color-water: #40c4ff;
+    --color-grass: #76ff03;
+    --color-electric: #ffea00;
+    --color-psychic: #e040fb;
+    --color-fighting: #ff6e40;
+
+    /* State Colors */
+    --color-error: #ff5252;
+    --color-success: #00ff9f;
+    --color-warning: #ffc400;
+    --color-info: #448aff;
+
+    /* Effects */
+    --color-shadow: rgba(0, 0, 0, 0.4);
+    --color-glow: rgba(0, 255, 159, 0.4);
+}
+
+/* Smooth theme transitions */
+* {
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+@layer utilities {
+    /* Pokeball gradient background */
+    .pokeball-bg {
+        background: linear-gradient(
+            180deg,
+            var(--color-accent-red) 0%,
+            var(--color-accent-red) 48%,
+            #1a1a1a 48%,
+            #1a1a1a 52%,
+            #ffffff 52%,
+            #ffffff 100%
+        );
+    }
+
+    /* Sky gradient backgrounds */
+    .sky-gradient {
+        background: linear-gradient(
+            180deg,
+            #87ceeb 0%,
+            #e3f2fd 50%,
+            #ffffff 100%
+        );
+    }
+
+    .dark .sky-gradient {
+        background: linear-gradient(
+            180deg,
+            #0a1929 0%,
+            #1a2332 50%,
+            #243447 100%
+        );
+    }
+
+    /* Glow effect */
+    .glow-green {
+        box-shadow: 0 0 20px var(--color-glow);
+    }
+
+    .glow-accent {
+        box-shadow: 0 0 15px var(--color-accent);
+    }
+
+    /* Energy pulse animation */
+    .pulse-energy {
+        animation: pulse-energy 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse-energy {
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.7;
+            transform: scale(1.05);
+        }
+    }
+
+    /* Capture shake animation */
+    .capture-shake {
+        animation: capture-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes capture-shake {
+        10%,
+        90% {
+            transform: translate3d(-1px, 0, 0);
+        }
+        20%,
+        80% {
+            transform: translate3d(2px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+            transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+            transform: translate3d(4px, 0, 0);
+        }
+    }
+
+    /* Pokemon spawn animation */
+    .spawn-in {
+        animation: spawn-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes spawn-in {
+        0% {
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) rotate(360deg);
+        }
+    }
+
+    /* Floating animation */
+    .float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+}
