@@ -21,6 +21,10 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 
+app.get("/health-check", (req, res) => {
+  return res.status(200).send("Works good!");
+});
+
 app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "Protected route accessed!" });
 });
