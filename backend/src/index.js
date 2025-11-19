@@ -29,6 +29,7 @@ app.get("/protected", authMiddleware, (req, res) => {
   res.json({ message: "Protected route accessed!" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}!`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}!`);
+// });
+module.exports = app;
