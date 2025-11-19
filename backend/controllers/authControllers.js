@@ -356,6 +356,10 @@ const checkEmail = async (req, res) => {
 const handleAuthMe = async (req, res) => {
   const user = await userModel.findOne({ username: req.user.username });
 
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
   const response = {
     _id: user._id.toString(),
     username: user.username,
