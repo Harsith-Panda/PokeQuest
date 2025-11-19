@@ -163,6 +163,8 @@ const login = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
     const response = {
       _id: user._id.toString(),
       username: user.username,
@@ -228,6 +230,8 @@ const handleRefreshToken = async (req, res) => {
       path: "/", // accessible everywhere
       maxAge: 1000 * 60 * 15,
     });
+
+    res.setHeader("Access-Control-Allow-Credentials", "true");
 
     return res.status(200).json({ message: "Token refreshed successfully!" });
   });
@@ -325,6 +329,8 @@ const logout = async (req, res) => {
     // Clear cookies
     res.clearCookie("accessToken", cookieOptions);
     res.clearCookie("refreshToken", cookieOptions);
+
+    res.setHeader("Access-Control-Allow-Credentials", "true");
 
     return res.status(200).json({
       message: "Logged out successfully",
