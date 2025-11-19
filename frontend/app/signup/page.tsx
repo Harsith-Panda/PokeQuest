@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import AuthNavbar from "../components/AuthNavbar";
 import {
   Mail,
   Lock,
@@ -319,7 +318,7 @@ export default function SignupPage() {
               </h2>
               <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                 <p className="font-body text-sm sm:text-base text-text-secondary">
-                  We've sent a verification email to:
+                  {"We've sent a verification email to:"}
                 </p>
                 <p className="font-medium text-sm sm:text-base text-accent bg-hover px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg break-all">
                   {formData.email}

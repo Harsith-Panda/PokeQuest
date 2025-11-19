@@ -28,7 +28,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<Notification | null>(null);
-  const { login } = useStore();
+  const { login, user, loading } = useStore();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -359,7 +359,7 @@ export default function LoginPage() {
 
             {/* Footer */}
             <p className="text-center text-xs sm:text-sm text-text-secondary mt-4 sm:mt-6">
-              Don't have an account?{" "}
+              {"Don't have an account?"}{" "}
               <Link
                 href="/signup"
                 className="text-accent hover:text-accent-secondary font-medium transition-colors"

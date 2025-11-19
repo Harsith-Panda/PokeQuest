@@ -341,7 +341,7 @@ export default function Home() {
           </h2>
           <p className="font-body text-lg sm:text-xl text-white/90 mb-10 max-w-2xl mx-auto">
             Join thousands of trainers and start your Pokémon adventure today.
-            It's free to play!
+            {"It's free to play!"}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -372,7 +372,9 @@ export default function Home() {
             Get In Touch
           </h2>
           <p className="text-lg text-text-secondary mb-8">
-            Have questions? Want to report a bug? We'd love to hear from you!
+            {
+              "Have questions? Want to report a bug? We'd love to hear from you!"
+            }
           </p>
           <Link
             href="mailto:support@pokequest.com"
@@ -390,7 +392,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="font-logo text-accent text-lg">PokeQuest</div>
             <div className="text-sm text-text-secondary text-center">
-              © 2024 PokeQuest. All rights reserved. Gotta catch 'em all!
+              {"© 2024 PokeQuest. All rights reserved. Gotta catch 'em all!"}
             </div>
             <div className="flex gap-6">
               <Link

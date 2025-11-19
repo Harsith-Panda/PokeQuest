@@ -5,20 +5,22 @@ import { MapPin, Zap, Trophy, Package, TrendingUp, Target } from "lucide-react";
 import { useStore } from "../utils/store/store";
 
 export default function DashboardPage() {
-  const { user } = useStore();
+  const { user, loading } = useStore();
+
+  console.log(user, loading);
 
   return (
     <>
       <AppNavbar user={user} />
 
-      <div className="min-h-screen bg-[var(--color-bg)] p-4 sm:p-6 lg:p-8">
+      <div className="min-h-screen bg- p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h1 className="font-accents text-3xl sm:text-4xl text-[var(--color-text-primary)] mb-2">
+            <h1 className="font-accents text-3xl sm:text-4xl text-text-primary mb-2">
               Welcome back, {user?.username}! 👋
             </h1>
-            <p className="text-[var(--color-text-secondary)]">
+            <p className="text-text-secondary">
               Ready to catch some Pokémon today?
             </p>
           </div>
@@ -57,7 +59,7 @@ export default function DashboardPage() {
             ].map((stat, i) => (
               <div
                 key={i}
-                className="bg-[var(--color-surface)] rounded-2xl p-6 border-2 border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all hover:scale-105 shadow-lg"
+                className="bg-surface rounded-2xl p-6 border-2 border-border hover:border-[var(--color-accent)] transition-all hover:scale-105 shadow-lg"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div
@@ -71,12 +73,10 @@ export default function DashboardPage() {
                   </div>
                   <TrendingUp className="w-4 h-4 text-[var(--color-success)]" />
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] mb-1">
+                <p className="text-2xl sm:text-3xl font-bold text-text-primary mb-1">
                   {stat.value}
                 </p>
-                <p className="text-sm text-[var(--color-text-secondary)] mb-2">
-                  {stat.label}
-                </p>
+                <p className="text-sm text-text-secondary mb-2">{stat.label}</p>
                 <p className="text-xs text-[var(--color-success)]">
                   {stat.trend}
                 </p>
@@ -87,8 +87,8 @@ export default function DashboardPage() {
           {/* Quick Actions */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Recent Activity */}
-            <div className="bg-[var(--color-surface)] rounded-2xl p-6 border-2 border-[var(--color-border)] shadow-lg">
-              <h2 className="font-accents text-xl text-[var(--color-text-primary)] mb-4">
+            <div className="bg-surface rounded-2xl p-6 border-2 border-border shadow-lg">
+              <h2 className="font-accents text-xl text-text-primary mb-4">
                 Recent Activity
               </h2>
               <div className="space-y-3">
@@ -116,10 +116,10 @@ export default function DashboardPage() {
                   >
                     <div className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
                     <div className="flex-1">
-                      <p className="text-sm text-[var(--color-text-primary)]">
+                      <p className="text-sm text-text-primary">
                         {activity.action}
                       </p>
-                      <p className="text-xs text-[var(--color-text-secondary)]">
+                      <p className="text-xs text-text-secondary">
                         {activity.time}
                       </p>
                     </div>
@@ -129,8 +129,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Daily Goals */}
-            <div className="bg-[var(--color-surface)] rounded-2xl p-6 border-2 border-[var(--color-border)] shadow-lg">
-              <h2 className="font-accents text-xl text-[var(--color-text-primary)] mb-4">
+            <div className="bg-surface rounded-2xl p-6 border-2 border-border shadow-lg">
+              <h2 className="font-accents text-xl text-text-primary mb-4">
                 Daily Goals
               </h2>
               <div className="space-y-4">
@@ -156,14 +156,12 @@ export default function DashboardPage() {
                 ].map((goal, i) => (
                   <div key={i}>
                     <div className="flex justify-between items-center mb-2">
-                      <p className="text-sm text-[var(--color-text-primary)]">
-                        {goal.goal}
-                      </p>
-                      <p className="text-xs text-[var(--color-text-secondary)]">
+                      <p className="text-sm text-text-primary">{goal.goal}</p>
+                      <p className="text-xs text-text-secondary">
                         {goal.progress}/{goal.total}
                       </p>
                     </div>
-                    <div className="w-full h-2 bg-[var(--color-border)] rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-border rounded-full overflow-hidden">
                       <div
                         className="h-full transition-all duration-300 rounded-full"
                         style={{

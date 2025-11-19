@@ -34,6 +34,7 @@ type userActions = {
   }) => Promise<AxiosResponse>;
   login: (data: { email: string; password: string }) => Promise<AxiosResponse>;
   fetchMe: () => Promise<void>;
+  setUser: (user: UserState) => void;
 };
 
 export type userSlice = {
@@ -85,5 +86,8 @@ export const createUserSlice: StateCreator<
     } finally {
       set({ loading: false }); // ← CRUCIAL
     }
+  },
+  setUser: (user: UserState) => {
+    set({ user });
   },
 }));

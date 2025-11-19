@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+// import { redirect } from "next/navigation";
 import {
   Menu,
   X,
@@ -25,6 +26,7 @@ import {
 import Switcher from "./Switcher";
 import { UserState } from "../utils/slices/userSlice";
 import { useStore } from "../utils/store/store";
+import { redirect } from "next/navigation";
 
 interface AppNavbarProps {
   user: UserState | null;
@@ -105,6 +107,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
   const handleLogout = async () => {
     try {
       await logout();
+      router.push("/login");
     } catch (e) {
       console.error(e);
     }

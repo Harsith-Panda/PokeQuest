@@ -281,7 +281,9 @@ function VerifyEmailContent() {
                 </h3>
                 <ul className="text-sm text-[var(--color-text-secondary)] space-y-1">
                   <li>• Check your spam/junk folder</li>
-                  <li>• Make sure you're using the latest verification link</li>
+                  <li>
+                    • {"Make sure you're using the latest verification link"}
+                  </li>
                   <li>• Contact support if the issue persists</li>
                 </ul>
                 <Link

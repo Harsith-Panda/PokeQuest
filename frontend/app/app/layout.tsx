@@ -1,10 +1,32 @@
-import ProtectedRoutes from "../components/ProtectedRoutes";
+import { api } from "../utils/api/api";
+import { redirect } from "next/navigation";
+import ZustandUser from "../components/ZustandUser";
+import { cookies } from "next/headers";
 
-export default function RootLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // HttpOnly JWT cookie
-  return <ProtectedRoutes>{children}</ProtectedRoutes>;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+  const response = await api.get("/api/auth/me", {
+    headers: {
+      Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
+    },
+    validateStatus: () => true, // ⬅ stops axios from throwing
+  });
+
+  if (response.status !== 200) {
+    redirect("/login");
+  }
+
+  const user = response.data.data;
+
+  return (
+    <>
+      <ZustandUser user={user} />
+      {children}
+    </>
+  );
 }
