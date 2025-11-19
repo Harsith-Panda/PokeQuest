@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-start": "node src/index.js"
+    "build": "node src/index.js"
   },
   "author": "S. Harsith Priyan",
   "license": "ISC",
