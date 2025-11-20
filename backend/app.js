@@ -10,6 +10,9 @@ const cors = require("cors");
 
 connectDB();
 
+app.use(cookieParser());
+app.use(express.json());
+
 app.use(
   cors({
     origin: `${process.env.FRONTEND_URL}`,
@@ -17,8 +20,7 @@ app.use(
   }),
 );
 
-app.use(cookieParser());
-app.use(express.json());
+app.options("*", cors());
 
 // app.use((req, res, next) => {
 //   if (!isConnected) {
