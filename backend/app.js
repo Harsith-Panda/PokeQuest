@@ -20,7 +20,7 @@ app.use(
   }),
 );
 
-app.options("*", cors());
+app.options("/api", cors());
 
 // app.use((req, res, next) => {
 //   if (!isConnected) {
