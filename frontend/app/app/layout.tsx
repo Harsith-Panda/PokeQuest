@@ -11,10 +11,7 @@ export default async function AppLayout({
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
   const response = await api.get("/api/auth/me", {
-    headers: {
-      Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
-    },
-    validateStatus: () => true, // ⬅ stops axios from throwing
+    withCredentials: true,
   });
 
   if (response.status !== 200) {
