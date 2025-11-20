@@ -3,7 +3,7 @@ const inventoryModel = require("../models/inventoryModel");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 require("dotenv").config();
-const production = process.env.PRODUCTION;
+const production = process.env.PRODUCTION === "true";
 const {
   sendVerifyEmail,
   sendResetPasswordEmail,
@@ -150,7 +150,7 @@ const login = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: production, // required for cross-site cookies
-      sameSite: production === true ? "none" : "lax", // required for frontend-backend different domains
+      sameSite: production ? "none" : "lax", // required for frontend-backend different domains
       path: "/", // accessible everywhere
       maxAge: 1000 * 60 * 15,
     });
@@ -158,7 +158,7 @@ const login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: production,
-      sameSite: production === true ? "none" : "lax",
+      sameSite: production ? "none" : "lax",
       path: "/api/auth/refresh",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
@@ -218,7 +218,7 @@ const handleRefreshToken = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: production,
-      sameSite: production === true ? "none" : "lax",
+      sameSite: production ? "none" : "lax",
       path: "/api/auth/refresh",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
@@ -226,7 +226,7 @@ const handleRefreshToken = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: production, // required for cross-site cookies
-      sameSite: production === true ? "none" : "lax", // required for frontend-backend different domains
+      sameSite: production ? "none" : "lax", // required for frontend-backend different domains
       path: "/", // accessible everywhere
       maxAge: 1000 * 60 * 15,
     });
@@ -322,7 +322,7 @@ const logout = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: production,
-      sameSite: production === true ? "none" : "lax",
+      sameSite: production ? "none" : "lax",
       path: "/",
     };
 
