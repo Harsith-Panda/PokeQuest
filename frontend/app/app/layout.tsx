@@ -14,6 +14,7 @@ export default async function AppLayout({
   let user = undefined;
 
   try {
+    console.log("set");
     const response = await api.get("/api/auth/me", {
       headers: {
         Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
