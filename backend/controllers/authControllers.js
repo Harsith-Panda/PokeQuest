@@ -151,7 +151,6 @@ const login = async (req, res) => {
       httpOnly: true,
       secure: production, // required for cross-site cookies
       sameSite: production ? "none" : "lax", // required for frontend-backend different domains
-      domain: process.env.DOMAIN_COOKIE,
       path: "/", // accessible everywhere
       maxAge: 1000 * 60 * 15,
     });
@@ -161,7 +160,6 @@ const login = async (req, res) => {
       secure: production,
       sameSite: production ? "none" : "lax",
       path: "/api/auth/refresh",
-      domain: process.env.DOMAIN_COOKIE,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -222,7 +220,6 @@ const handleRefreshToken = async (req, res) => {
       secure: production,
       sameSite: production ? "none" : "lax",
       path: "/api/auth/refresh",
-      domain: process.env.DOMAIN_COOKIE,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -231,7 +228,6 @@ const handleRefreshToken = async (req, res) => {
       secure: production, // required for cross-site cookies
       sameSite: production ? "none" : "lax", // required for frontend-backend different domains
       path: "/", // accessible everywhere
-      domain: process.env.DOMAIN_COOKIE,
       maxAge: 1000 * 60 * 15,
     });
 
@@ -327,7 +323,6 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: production,
       sameSite: production ? "none" : "lax",
-      domain: process.env.DOMAIN_COOKIE,
       path: "/",
     };
 

@@ -22,6 +22,8 @@ app.use(
 
 app.options("/api", cors());
 
+app.set("trust proxy", 1);
+
 // app.use((req, res, next) => {
 //   if (!isConnected) {
 //     connectDBNow();
