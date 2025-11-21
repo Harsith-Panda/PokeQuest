@@ -10,18 +10,24 @@ export default async function AppLayout({
 }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
-  const response = await api.get("/api/auth/me", {
-    headers: {
-      Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
-    },
-    validateStatus: () => true, // ⬅ stops axios from throwing
-  });
+  let user = undefined;
 
-  if (response.status !== 200) {
+  try {
+    const response = await api.get("/api/auth/me", {
+      headers: {
+        Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
+      },
+      validateStatus: () => true, // ⬅ stops axios from throwing
+    });
+
+    // if (response.status !== 200) {
+    //   redirect("/login");
+    // }
+
+    user = response.data.data;
+  } catch (e) {
     redirect("/login");
   }
-
-  const user = response.data.data;
 
   return (
     <>
