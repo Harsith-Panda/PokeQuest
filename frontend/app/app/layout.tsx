@@ -1,4 +1,5 @@
 import { api } from "../utils/api/api";
+import axios from "axios";
 import { redirect } from "next/navigation";
 import ZustandUser from "../components/ZustandUser";
 import { cookies } from "next/headers";
@@ -25,8 +26,13 @@ export default async function AppLayout({
     // }
 
     user = response.data.data;
-  } catch (e) {
-    redirect("/login");
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 401) {
+        redirect("/login");
+        return;
+      }
+    }
   }
 
   return (
