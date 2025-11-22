@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import Switcher from "./Switcher";
 import { UserState } from "../utils/slices/userSlice";
-import { useStore } from "../utils/store/store";
+// import { useStore } from "../utils/store/store";
 import { redirect } from "next/navigation";
 
 interface AppNavbarProps {
@@ -40,7 +40,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [notifications, setNotifications] = useState(3); // Mock notification count
-  const { logout } = useStore();
+  // const { logout } = useStore();
 
   // Handle scroll effect
   useEffect(() => {
@@ -104,14 +104,14 @@ export default function AppNavbar({ user }: AppNavbarProps) {
   };
 
   // Handle logout
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.push("/login");
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout();
+  //     router.push("/login");
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   // Mock notifications
   const mockNotifications = [
@@ -321,7 +321,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
                         ))}
                       </div>
 
-                      <div className="border-t border-[var(--color-border)]">
+                      {/*<div className="border-t border-[var(--color-border)]">
                         <button
                           onClick={handleLogout}
                           className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[var(--color-error)]/10 text-[var(--color-error)] transition-colors"
@@ -329,7 +329,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
                           <LogOut className="w-4 h-4" />
                           <span className="text-sm font-medium">Logout</span>
                         </button>
-                      </div>
+                      </div>*/}
                     </div>
                   </>
                 )}
@@ -438,7 +438,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
           </nav>
 
           {/* Logout Button */}
-          <div className="p-4 border-t border-[var(--color-border)]">
+          {/*<div className="p-4 border-t border-[var(--color-border)]">
             <button
               onClick={handleLogout}
               className="flex items-center justify-center gap-3 w-full p-4 rounded-lg bg-[var(--color-error)]/10 text-[var(--color-error)] hover:bg-[var(--color-error)]/20 transition-all font-semibold"
@@ -446,7 +446,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
               <LogOut className="w-5 h-5" />
               Logout
             </button>
-          </div>
+          </div>*/}
         </div>
       </div>
 
