@@ -9,47 +9,31 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const cookieStore = await cookies();
-  // const token = cookieStore.get("accessToken")?.value;
-  // let user = undefined;
-
-  // try {
-  //   console.log("set");
-  //   const response = await api.get("/api/auth/me", {
-  //     headers: {
-  //       Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
-  //     },
-  //     validateStatus: () => true, // ⬅ stops axios from throwing
-  //   });
-
-  //   // if (response.status !== 200) {
-  //   //   redirect("/login");
-  //   // }
-
-  //   user = response.data.data;
-  // } catch (err) {
-  //   if (axios.isAxiosError(err)) {
-  //     if (err.response?.status === 401) {
-  //       redirect("/login");
-  //       return;
-  //     }
-  //   }
-  // }
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
   let user = undefined;
+
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/me`,
-      {
-        credentials: "include",
-        cache: "no-store",
+    console.log("set");
+    const response = await api.get("/api/auth/me", {
+      headers: {
+        Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
       },
-    );
+      validateStatus: () => true, // ⬅ stops axios from throwing
+    });
 
-    const data = await response.json();
+    // if (response.status !== 200) {
+    //   redirect("/login");
+    // }
 
-    user = data.data;
-  } catch (e) {
-    redirect("/login");
+    user = response.data.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 401) {
+        redirect("/login");
+        return;
+      }
+    }
   }
 
   return (
