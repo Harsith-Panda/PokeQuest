@@ -15,27 +15,12 @@ app.use(
   }),
 );
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
 connectDB();
 
 app.use(cookieParser());
 app.use(express.json());
 
 app.options("/api", cors());
-
-app.set("trust proxy", 1);
-
-// app.use((req, res, next) => {
-//   if (!isConnected) {
-//     connectDBNow();
-//   }
-//   next();
-// });
-
 app.use("/api/auth", authRouter);
 
 app.get("/health-check", (req, res) => {

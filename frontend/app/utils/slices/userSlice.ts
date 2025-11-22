@@ -51,6 +51,8 @@ export const createUserSlice: StateCreator<
   loading: false,
   user: null,
   logout: async () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     await api.post("/api/auth/logout");
     return set({ user: null });
   },
@@ -66,6 +68,9 @@ export const createUserSlice: StateCreator<
       const res = await api.post("/api/auth/login", { ...data });
 
       const user = res.data.user;
+
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
 
       set({ user: user });
 

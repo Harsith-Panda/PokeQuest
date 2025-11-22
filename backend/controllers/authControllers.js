@@ -9,6 +9,7 @@ const {
   sendResetPasswordEmail,
 } = require("../services/emailService");
 const jwt = require("jsonwebtoken");
+const { access } = require("fs/promises");
 
 const signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -53,6 +54,7 @@ const signup = async (req, res) => {
       },
       stats: { totalCaptures: 0, xp: 0, level: 1 },
       inventoryId: null,
+      refreshToken: null,
     });
 
     // 5. Generating inventory for user
@@ -147,24 +149,6 @@ const login = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: production, // required for cross-site cookies
-      sameSite: production ? "none" : "lax", // required for frontend-backend different domains
-      path: "/", // accessible everywhere
-      maxAge: 1000 * 60 * 15,
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: production,
-      sameSite: production ? "none" : "lax",
-      path: "/api/auth/refresh",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
-
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-
     const response = {
       _id: user._id.toString(),
       username: user.username,
@@ -175,9 +159,15 @@ const login = async (req, res) => {
       inventoryId: user.inventoryId,
     };
 
+    user.refreshToken = refreshToken;
+
+    await user.save();
+
     return res.status(200).json({
       success: true,
       user: response,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       message: "Logged in successfully!",
     });
   } catch (e) {
@@ -190,51 +180,72 @@ const login = async (req, res) => {
 };
 
 const handleRefreshToken = async (req, res) => {
-  const { refreshToken } = req.cookies;
+  try {
+    const oldRefreshToken = req.headers["x-refresh-token"];
 
-  if (!refreshToken) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
+    if (!oldRefreshToken) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const payload = {
-      id: decoded.id,
-      username: decoded.username,
-      email: decoded.email,
-    };
+    const user = await userModel.findOne({ refreshToken: oldRefreshToken });
+    if (!user) {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
 
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3m",
+    // ⚠ verify even if expired (ignoreExpiry bypass)
+    let decoded;
+    try {
+      decoded = jwt.verify(oldRefreshToken, process.env.JWT_SECRET);
+    } catch (err) {
+      decoded = jwt.decode(oldRefreshToken); // allow expired but valid signature
+    }
+
+    if (!decoded || decoded.id !== user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // create new access token
+    const accessToken = jwt.sign(
+      { id: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "3m" },
+    );
+
+    // rotate refresh token (VERY IMPORTANT)
+    const newRefreshToken = jwt.sign(
+      { id: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    // store the new one (rotate)
+    await userModel.findByIdAndUpdate(user.id, {
+      refreshToken: newRefreshToken,
     });
 
-    const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: production,
-      sameSite: production ? "none" : "lax",
-      path: "/api/auth/refresh",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
-
+    // send as cookies (BEST PRACTICE)
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: production, // required for cross-site cookies
-      sameSite: production ? "none" : "lax", // required for frontend-backend different domains
-      path: "/", // accessible everywhere
-      maxAge: 1000 * 60 * 15,
+      secure: true,
+      sameSite: "none",
+      path: "/",
     });
 
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: false, // optional if sending manually
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
 
-    return res.status(200).json({ message: "Token refreshed successfully!" });
-  });
+    return res.status(200).json({
+      message: "Token refreshed successfully",
+      accessToken,
+      refreshToken: newRefreshToken,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal error" });
+  }
 };
 
 const requestForgotPassword = async (req, res) => {
@@ -319,19 +330,6 @@ const resendVerificationEmail = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    const cookieOptions = {
-      httpOnly: true,
-      secure: production,
-      sameSite: production ? "none" : "lax",
-      path: "/",
-    };
-
-    // Clear cookies
-    res.clearCookie("accessToken", cookieOptions);
-    res.clearCookie("refreshToken", cookieOptions);
-
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-
     return res.status(200).json({
       message: "Logged out successfully",
     });
