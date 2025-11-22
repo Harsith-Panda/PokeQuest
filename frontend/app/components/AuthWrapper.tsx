@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../utils/api/api";
 import { useStore } from "../utils/store/store";
+import AuthLoading from "./AuthLoading";
 
 export default function AuthWrapper({
   children,
@@ -32,7 +33,7 @@ export default function AuthWrapper({
       .catch(() => router.replace("/login"));
   }, [router]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <AuthLoading variant="full" />;
 
   return <>{children}</>;
 }

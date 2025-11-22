@@ -1,13 +1,11 @@
 // app/app/page.tsx
 "use client";
 import AppNavbar from "../components/AppNavbar";
-import { MapPin, Zap, Trophy, Package, TrendingUp, Target } from "lucide-react";
+import { MapPin, Zap, Trophy, Package, TrendingUp } from "lucide-react";
 import { useStore } from "../utils/store/store";
 
 export default function DashboardPage() {
-  const { user, loading } = useStore();
-
-  console.log(user, loading);
+  const { user } = useStore();
 
   return (
     <>

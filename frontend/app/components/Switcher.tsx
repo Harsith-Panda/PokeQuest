@@ -8,7 +8,6 @@ export default function Switcher() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    console.log(resolvedTheme);
     setMounted(true);
   }, []);
 
@@ -23,11 +22,6 @@ export default function Switcher() {
 
   return (
     <div>
-      {/*<button
-        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      >
-        {resolvedTheme === "dark" ? "Light" : "Dark"}
-      </button>*/}
       {resolvedTheme === "dark" ? (
         <Sun size={22} onClick={() => setTheme("light")} />
       ) : (
