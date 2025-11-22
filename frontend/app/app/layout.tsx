@@ -1,5 +1,4 @@
 import { api } from "../utils/api/api";
-import axios from "axios";
 import { redirect } from "next/navigation";
 import ZustandUser from "../components/ZustandUser";
 import { cookies } from "next/headers";
@@ -11,30 +10,19 @@ export default async function AppLayout({
 }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
-  let user = undefined;
 
-  try {
-    console.log("set");
-    const response = await api.get("/api/auth/me", {
-      headers: {
-        Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
-      },
-      validateStatus: () => true, // ⬅ stops axios from throwing
-    });
+  const response = await api.get("/api/auth/me", {
+    headers: {
+      Cookie: `accessToken=${token}`, // ⬅⬅⬅ ABSOLUTELY REQUIRED
+    },
+    validateStatus: () => true, // ⬅ stops axios from throwing
+  });
 
-    // if (response.status !== 200) {
-    //   redirect("/login");
-    // }
-
-    user = response.data.data;
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (err.response?.status === 401) {
-        redirect("/login");
-        return;
-      }
-    }
+  if (response.status !== 200) {
+    redirect("/login");
   }
+
+  const user = response.data.data;
 
   return (
     <>
