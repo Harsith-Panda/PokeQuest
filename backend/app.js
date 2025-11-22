@@ -8,10 +8,21 @@ const cookieParser = require("cookie-parser");
 const authMiddleware = require("./middlewares/authMiddleware");
 const cors = require("cors");
 
+const allowedOrigins = [
+  "http://127.0.0.1:4030",
+  "https://poke-quest-web.vercel.app",
+];
+
 app.use(
   cors({
-    origin: `${process.env.FRONTEND_URL}`,
     credentials: true,
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   }),
 );
 
