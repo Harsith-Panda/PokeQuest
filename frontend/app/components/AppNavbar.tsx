@@ -88,7 +88,6 @@ export default function AppNavbar({ user }: AppNavbarProps) {
     { href: "/app/profile", label: "My Profile", icon: User },
     { href: "/app/stats", label: "Statistics", icon: BarChart3 },
     { href: "/app/rewards", label: "Rewards", icon: Gift },
-    { href: "/app/settings", label: "Settings", icon: Settings },
   ];
 
   // Check if link is active
