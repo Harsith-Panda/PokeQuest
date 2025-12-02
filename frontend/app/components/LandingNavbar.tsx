@@ -3,8 +3,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X, Compass, Trophy, Mail, LogIn, UserPlus } from "lucide-react";
 import Switcher from "./Switcher";
+import { useRouter } from "next/navigation";
 
 export default function LandingNavbar() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -39,9 +41,9 @@ export default function LandingNavbar() {
   }, [menuOpen]);
 
   const navLinks = [
-    { href: "#features", label: "Features", icon: Compass },
-    { href: "#leaderboard", label: "Leaderboard", icon: Trophy },
-    { href: "#contact", label: "Contact", icon: Mail },
+    { href: "/#features", label: "Features", icon: Compass },
+    { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
+    { href: "/#contact", label: "Contact", icon: Mail },
   ];
 
   return (
@@ -58,10 +60,10 @@ export default function LandingNavbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="font-logo text-lg sm:text-xl md:text-2xl text-green-500 hover:text-green-600 transition-colors relative group"
+              className="font-logo text-lg sm:text-xl md:text-2xl text-accent transition-colors relative group"
             >
               <span className="relative z-10">PokeQuest</span>
-              <span className="absolute inset-0 bg-glow blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute inset-0 bg-glow blur-xl opacity-0 transition-opacity" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -93,7 +95,7 @@ export default function LandingNavbar() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="flex items-center gap-2 px-5 py-2 rounded-lg bg-accent hover:bg-accent-secondary text-white font-medium text-sm transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                  className="flex items-center gap-2 px-5 py-2 rounded-lg bg-accent hover:bg-accent-secondary text-black font-medium text-sm transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
                 >
                   <UserPlus className="w-4 h-4" />
                   Sign Up

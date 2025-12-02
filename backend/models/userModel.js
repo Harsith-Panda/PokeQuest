@@ -58,6 +58,10 @@ const userSchema = mongoose.Schema(
         required: false,
       },
     },
+    lastSpawnedAt: {
+      type: Date,
+      default: null,
+    },
     stats: {
       totalCaptures: { type: Number, default: 0 },
       xp: { type: Number, default: 0 },

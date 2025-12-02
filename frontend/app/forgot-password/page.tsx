@@ -30,7 +30,6 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setError("");
 
-    // Validate
     const emailError = validateEmail(email);
     if (emailError) {
       setError(emailError);
@@ -48,17 +47,13 @@ export default function ForgotPasswordPage() {
       const data = response.data;
 
       if (response.status === 200) {
-        // 200 - Success
         setSuccess(true);
-        // Optionally redirect to confirmation page
         setTimeout(() => {
           router.push(`/login`);
         }, 2000);
       } else if (response.status === 404) {
-        // 404 - Email not found
         setError("No account found with this email address");
       } else if (response.status === 429) {
-        // 429 - Too many requests
         setError("Too many requests. Please try again later");
       } else {
         setError(

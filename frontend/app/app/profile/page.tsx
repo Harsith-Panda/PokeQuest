@@ -92,7 +92,6 @@ export default function ProfilePage() {
     if (debouncedUsername.length >= 3) {
       setUsernameStatus("checking");
 
-      // Simulate API call to check username availability
       const checkUsername = async () => {
         try {
           const response = await api.post("/api/auth/check-username", {
@@ -336,9 +335,6 @@ export default function ProfilePage() {
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-secondary)] flex items-center justify-center text-white font-bold text-4xl sm:text-5xl shadow-xl">
                   {user?.username?.charAt(0).toUpperCase()}
                 </div>
-                <button className="absolute bottom-0 right-0 w-10 h-10 bg-[var(--color-accent)] hover:bg-[var(--color-accent-secondary)] rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110">
-                  <Camera className="w-5 h-5 text-white" />
-                </button>
               </div>
 
               {/* User Info */}

@@ -10,6 +10,7 @@ import {
   X,
   Loader2,
   AlertCircle,
+  Gamepad2Icon
 } from "lucide-react";
 import Link from "next/link";
 import { api } from "../utils/api/api";
@@ -41,6 +42,7 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<string>("");
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -199,6 +201,8 @@ export default function SignupPage() {
 
     setFormData((prev) => ({ ...prev, [name]: newValue }));
 
+    if (serverError) setServerError("");
+
     // Validate on change if field has been touched
     if (touched[name as keyof typeof touched] && type !== "checkbox") {
       const error = validateField(name, value);
@@ -237,6 +241,7 @@ export default function SignupPage() {
 
   const passwordStrength = getPasswordStrength(formData.password);
 
+  // Handle submit - Idhula dhan api call pannanum
   // Handle submit - Idhula dhan api call pannanum
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -284,23 +289,73 @@ export default function SignupPage() {
     setIsSubmitting(true);
 
     // Simulate API call
-    signUp(formData).then((res) => {
-      if (res.status === 201) {
-        setShowSuccessMessage(true);
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else if (res.status === 400) {
-        setErrors({
-          username: res.data.username || "",
-          email: res.data.email || "",
-          password: res.data.password || "",
-          confirmPassword: res.data.confirmPassword || "",
-          terms: res.data.terms || "",
-        });
-      }
-    });
-    setIsSubmitting(false);
+    signUp(formData)
+      .then((res) => {
+        if (res.status === 201) {
+          setShowSuccessMessage(true);
+          setTimeout(() => {
+            router.push("/login");
+          }, 3000);
+        } else if (res.status !== 201) {
+          setErrors({
+            username: res.data.username || "",
+            email: res.data.email || "",
+            password: res.data.password || "",
+            confirmPassword: res.data.confirmPassword || "",
+            terms: res.data.terms || "",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Signup error:", error);
+
+        // Handle Axios errors
+        if (error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+
+          if (status === 400) {
+            // Validation errors from backend
+            setErrors({
+              username: data.username || "",
+              email: data.email || "",
+              password: data.password || "",
+              confirmPassword: data.confirmPassword || "",
+              terms: data.terms || "",
+            });
+
+            // Show general error message if provided
+            if (data.message) {
+              setServerError(data.message);
+            }
+          } else if (status === 500) {
+            // Internal server error
+            setServerError(
+              data.message || "Internal server error. Please try again later.",
+            );
+          } else if (status === 409) {
+            // Conflict (duplicate username/email)
+            setServerError(data.message || "Username or email already exists.");
+          } else {
+            // Other HTTP errors
+            setServerError(
+              data.message ||
+                `An error occurred (${status}). Please try again.`,
+            );
+          }
+        } else if (error.request) {
+          // Network error - request was made but no response received
+          setServerError(
+            "Network error. Please check your internet connection and try again.",
+          );
+        } else {
+          // Something else went wrong
+          setServerError("An unexpected error occurred. Please try again.");
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   if (showSuccessMessage) {
@@ -355,7 +410,7 @@ export default function SignupPage() {
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8">
               <div className="w-14 h-14 sm:w-16 sm:h-16 bg-hover rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 border-2 border-accent">
-                <span className="text-2xl sm:text-3xl">🎮</span>
+                <span className="text-2xl sm:text-3xl"><Gamepad2Icon style={{color: "var(--color-accent)"}} size={36}/></span>
               </div>
               <h1 className="font-accents text-2xl sm:text-3xl text-text-primary mb-2">
                 Join PokeQuest
@@ -364,6 +419,22 @@ export default function SignupPage() {
                 Start your Pokémon adventure today
               </p>
             </div>
+
+            {serverError && (
+              <div className="mb-4 sm:mb-5 p-3 sm:p-4 bg-red-500 border-2 border-red-500 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-red-50 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-red-50 mb-1">
+                      Error
+                    </p>
+                    <p className="text-xs sm:text-sm text-red-50">
+                      {serverError}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">

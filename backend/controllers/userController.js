@@ -1,5 +1,7 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
@@ -63,8 +65,29 @@ const updateLocation = async (req, res) => {
   return res.status(200).json({ message: "Location updated successfully!" });
 };
 
+const getUser = async (req, res) => {
+  const user = await userModel.findOne({ username: req.user.username });
+
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  const response = {
+    _id: user._id.toString(),
+    username: user.username,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    lastLocation: user.lastLocation,
+    stats: user.stats,
+    inventoryId: user.inventoryId,
+  };
+
+  return res.status(200).json({ success: true, data: response });
+};
+
 module.exports = {
   updatePassword,
   updateUsername,
   updateLocation,
+  getUser,
 };

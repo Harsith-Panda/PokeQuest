@@ -1,4 +1,3 @@
-// components/AppNavbar.tsx
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,15 +9,7 @@ import {
   Package,
   Trophy,
   User,
-  Settings,
   LogOut,
-  Bell,
-  Home,
-  Users,
-  BarChart3,
-  Gamepad2,
-  Gift,
-  Award,
 } from "lucide-react";
 import Switcher from "./Switcher";
 import { UserState } from "../utils/slices/userSlice";
@@ -33,9 +24,7 @@ export default function AppNavbar({ user }: AppNavbarProps) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [notifications, setNotifications] = useState(3); // Mock notification count
   const { logout } = useStore();
 
   // Handle scroll effect
@@ -53,7 +42,6 @@ export default function AppNavbar({ user }: AppNavbarProps) {
       if (e.key === "Escape") {
         setMenuOpen(false);
         setProfileOpen(false);
-        setNotificationsOpen(false);
       }
     };
     document.addEventListener("keydown", handleEscape);
@@ -74,20 +62,14 @@ export default function AppNavbar({ user }: AppNavbarProps) {
 
   // Main navigation links
   const navLinks = [
-    { href: "/app", label: "Dashboard", icon: Home, exact: true },
     { href: "/app/map", label: "Map", icon: Map },
     { href: "/app/inventory", label: "Inventory", icon: Package },
-    { href: "/app/pokedex", label: "Pokédex", icon: Gamepad2 },
-    { href: "/app/leaderboard", label: "Leaderboard", icon: Trophy },
-    { href: "/app/friends", label: "Friends", icon: Users },
-    { href: "/app/battles", label: "Battles", icon: Award },
+    { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
   ];
 
   // Profile dropdown links
   const profileLinks = [
     { href: "/app/profile", label: "My Profile", icon: User },
-    { href: "/app/stats", label: "Statistics", icon: BarChart3 },
-    { href: "/app/rewards", label: "Rewards", icon: Gift },
   ];
 
   // Check if link is active
@@ -108,38 +90,6 @@ export default function AppNavbar({ user }: AppNavbarProps) {
     }
   };
 
-  // Mock notifications
-  const mockNotifications = [
-    {
-      id: 1,
-      type: "pokemon",
-      message: "A rare Charizard appeared nearby!",
-      time: "2 min ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      type: "battle",
-      message: "You won a battle against Trainer Alex!",
-      time: "1 hour ago",
-      unread: true,
-    },
-    {
-      id: 3,
-      type: "friend",
-      message: "Sarah sent you a friend request",
-      time: "3 hours ago",
-      unread: true,
-    },
-    {
-      id: 4,
-      type: "achievement",
-      message: "Achievement unlocked: Catch 100 Pokémon",
-      time: "1 day ago",
-      unread: false,
-    },
-  ];
-
   return (
     <>
       <header
@@ -153,12 +103,12 @@ export default function AppNavbar({ user }: AppNavbarProps) {
           <div className="flex justify-between items-center h-16 md:h-18">
             {/* Logo */}
             <Link
-              href="/app"
-              className="flex items-center gap-2 font-logo text-base sm:text-lg md:text-xl text-accent hover:text-accent-secondary transition-colors group"
+              href="/app/map"
+              className="flex items-center gap-2 font-logo text-base sm:text-lg md:text-xl text-accent transition-colors group"
             >
               <span className="relative">
                 PokeQuest
-                <span className="absolute inset-0 bg-glow blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="absolute inset-0 bg-glow blur-xl opacity-0 transition-opacity" />
               </span>
             </Link>
 
@@ -169,8 +119,8 @@ export default function AppNavbar({ user }: AppNavbarProps) {
                   key={link.href}
                   href={link.href}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActiveLink(link.href, link.exact)
-                      ? "bg-accent text-white shadow-md"
+                    isActiveLink(link.href)
+                      ? "bg-accent text-black shadow-md"
                       : "text-text-primary hover:bg-hover hover:text-accent"
                   }`}
                 >
@@ -182,7 +132,6 @@ export default function AppNavbar({ user }: AppNavbarProps) {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* User Level & XP (Desktop) */}
               <div className="hidden lg:flex items-center gap-3 px-3 py-2 rounded-lg bg-hover border border-border">
                 <div className="font-accents-secondary text-xs">
                   <div className="text-accent font-bold">
@@ -192,64 +141,6 @@ export default function AppNavbar({ user }: AppNavbarProps) {
                 </div>
               </div>
 
-              {/* Notifications */}
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setNotificationsOpen(!notificationsOpen);
-                    setProfileOpen(false);
-                  }}
-                  className="relative p-2 rounded-lg text-text-primary hover:bg-hover transition-all border border-border"
-                  title="Notifications"
-                >
-                  <Bell className="w-5 h-5" />
-                  {notifications > 0 && (
-                    <span className="absolute top-0 right-0 w-4 h-4 bg-error text-white text-xs font-bold rounded-full flex items-center justify-center">
-                      {notifications}
-                    </span>
-                  )}
-                </button>
-
-                {/* Notifications Dropdown */}
-                {notificationsOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-10"
-                      onClick={() => setNotificationsOpen(false)}
-                    />
-                    <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-surface rounded-lg border-2 border-border shadow-2xl z-20">
-                      <div className="p-4 border-b border-border flex items-center justify-between">
-                        <h3 className="font-semibold text-text-primary">
-                          Notifications
-                        </h3>
-                        <button className="text-xs text-accent hover:text-accent-secondary">
-                          Mark all read
-                        </button>
-                      </div>
-                      <div className="py-2">
-                        {mockNotifications.map((notif) => (
-                          <div
-                            key={notif.id}
-                            className={`px-4 py-3 hover:bg-hover transition-colors cursor-pointer border-l-4 ${
-                              notif.unread
-                                ? "border-accent bg-hover/30"
-                                : "border-transparent"
-                            }`}
-                          >
-                            <p className="text-sm text-text-primary mb-1">
-                              {notif.message}
-                            </p>
-                            <p className="text-xs text-text-secondary">
-                              {notif.time}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
               <Switcher />
 
               {/* Profile Dropdown (Desktop) */}
@@ -257,11 +148,10 @@ export default function AppNavbar({ user }: AppNavbarProps) {
                 <button
                   onClick={() => {
                     setProfileOpen(!profileOpen);
-                    setNotificationsOpen(false);
                   }}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-hover transition-all border border-border"
                 >
-                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-black font-bold text-sm">
                     {user?.username.charAt(0).toUpperCase()}
                   </div>
                   <span className="text-sm font-medium text-text-primary hidden xl:inline">
@@ -397,8 +287,8 @@ export default function AppNavbar({ user }: AppNavbarProps) {
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center gap-3 p-3 rounded-lg font-medium transition-all ${
-                    isActiveLink(link.href, link.exact)
-                      ? "bg-accent text-white shadow-md"
+                    isActiveLink(link.href)
+                      ? "bg-accent text-black shadow-md"
                       : "text-text-primary hover:bg-hover hover:text-accent"
                   }`}
                 >

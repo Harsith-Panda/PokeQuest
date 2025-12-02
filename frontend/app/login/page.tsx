@@ -1,6 +1,5 @@
-// app/login/page.tsx
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Mail,
@@ -11,10 +10,12 @@ import {
   CheckCircle,
   Loader2,
   XCircle,
+  User2Icon
 } from "lucide-react";
 import Link from "next/link";
 import { useStore } from "../utils/store/store";
 import LandingNavbar from "../components/LandingNavbar";
+import AuthLoading from "../components/AuthLoading";
 
 type NotificationType = "success" | "error" | "warning" | "info";
 
@@ -25,10 +26,12 @@ interface Notification {
 
 export default function LoginPage() {
   const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<Notification | null>(null);
-  const { login, user, loading } = useStore();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { login } = useStore();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -92,7 +95,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Mark all fields as touched
     setTouched({
       email: true,
       password: true,
@@ -113,12 +115,15 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     setNotification(null);
-    try {
-      const response = await login(formData);
 
-      const data = response.data;
+    try {
+      const response = await login({
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (response.status === 200) {
+        const data = response.data;
         showNotification("success", data.message || "Logged in successfully!");
 
         if (formData.remember) {
@@ -128,45 +133,71 @@ export default function LoginPage() {
         }
 
         setTimeout(() => {
-          router.push("/app");
+          router.push("/app/map");
         }, 1500);
-      } else if (response.status === 400) {
+      }
+    } catch (error: any) {
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+
+        if (status === 400) {
+          showNotification(
+            "error",
+            data.message || "Email and password are required",
+          );
+        } else if (status === 404) {
+          showNotification(
+            "error",
+            data.message || "No account found with this email. Please sign up!",
+          );
+          setErrors((prev) => ({ ...prev, email: "User not found" }));
+        } else if (status === 403) {
+          showNotification(
+            "warning",
+            data.message || "Please verify your email before logging in",
+          );
+        } else if (status === 401) {
+          showNotification(
+            "error",
+            data.message || "Incorrect password. Please try again.",
+          );
+          setErrors((prev) => ({ ...prev, password: "Invalid password" }));
+        } else if (status === 500) {
+          showNotification(
+            "error",
+            data.message || "Server error. Please try again later.",
+          );
+        } else {
+          showNotification(
+            "error",
+            data.message || "Login failed. Please try again.",
+          );
+        }
+      } else if (error.request) {
         showNotification(
           "error",
-          data.message || "Email and password are required",
+          "Network error. Please check your connection and try again.",
         );
-      } else if (response.status === 404) {
-        showNotification(
-          "error",
-          "No account found with this email. Please sign up!",
-        );
-        setErrors((prev) => ({ ...prev, email: "User not found" }));
-      } else if (response.status === 403) {
-        showNotification(
-          "warning",
-          "Please verify your email before logging in",
-        );
-      } else if (response.status === 401) {
-        showNotification("error", "Incorrect password. Please try again.");
-        setErrors((prev) => ({ ...prev, password: "Invalid password" }));
-      } else if (response.status === 500) {
-        showNotification("error", "Server error. Please try again later.");
       } else {
         showNotification(
           "error",
-          data.message || "Login failed. Please try again.",
+          "An unexpected error occurred. Please try again.",
         );
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      showNotification(
-        "error",
-        "Network error. Please check your connection and try again.",
-      );
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      router.push("/app/map");
+    }
+    setIsLoading(false);
+  }, [router]);
 
   const NotificationBanner = ({
     notification,
@@ -219,6 +250,10 @@ export default function LoginPage() {
     );
   };
 
+  if (isLoading) {
+    return <AuthLoading variant="full" />;
+  }
+
   return (
     <>
       <LandingNavbar />
@@ -230,7 +265,7 @@ export default function LoginPage() {
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8">
               <div className="w-14 h-14 sm:w-16 sm:h-16 bg-hover rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 border-2 border-accent">
-                <span className="text-2xl sm:text-3xl">👋</span>
+                <span className="text-2xl sm:text-3xl"><User2Icon style={{color: "var(--color-accent)"}} size={32}/></span>
               </div>
               <h1 className="font-accents text-2xl sm:text-3xl text-text-primary mb-2">
                 Welcome Back!
@@ -294,7 +329,7 @@ export default function LoginPage() {
                         ? "border-error"
                         : "border-border"
                     } focus:border-accent focus:outline-none transition-colors text-text-primary placeholder:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed`}
-                    placeholder="••••••••"
+                    placeholder="Password"
                   />
                   <button
                     type="button"
@@ -374,7 +409,7 @@ export default function LoginPage() {
             <p className="text-xs sm:text-sm text-text-secondary">
               Having trouble logging in?{" "}
               <Link
-                href="/help"
+                href="/#contact"
                 className="text-accent hover:text-accent-secondary transition-colors"
               >
                 Get help

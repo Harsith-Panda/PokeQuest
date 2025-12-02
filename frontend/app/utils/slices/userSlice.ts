@@ -3,10 +3,12 @@ import { immer } from "zustand/middleware/immer";
 import { api } from "../api/api";
 import { AxiosResponse } from "axios";
 
+// Format for location followed : [lng, lat] (Consistent all over the codebase)
+
 type GeoPoint = {
   type: "Point";
   coordinates: [number, number]; // [lng, lat]
-  lastUpdated: string | null; // ISO Date string
+  lastUpdated: string | null;
 };
 
 type Stats = {
@@ -35,6 +37,7 @@ type userActions = {
   login: (data: { email: string; password: string }) => Promise<AxiosResponse>;
   fetchMe: () => Promise<void>;
   setUser: (user: UserState) => void;
+  updateLocation: (id: string, location: [number, number]) => Promise<void>;
 };
 
 export type userSlice = {
@@ -92,7 +95,19 @@ export const createUserSlice: StateCreator<
       set({ loading: false }); // ← CRUCIAL
     }
   },
-  setUser: (user: UserState) => {
-    set({ user });
+  setUser: (newUser: UserState) => {
+    set(() => ({
+      user: structuredClone(newUser), // works in modern browsers/node
+    }));
+  },
+  updateLocation: async (
+    id: string | undefined,
+    location: [number, number],
+  ) => {
+    await api.put("/api/user/update-location", {
+      id: id,
+      location: location,
+    });
+    set((state) => ({ ...state.user, lastLocation: location }));
   },
 }));

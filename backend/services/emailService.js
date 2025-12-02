@@ -75,8 +75,7 @@ const sendVerifyEmail = async (email, username, verificationToken) => {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Verification email sent:", info.messageId);
+    await transporter.sendMail(mailOptions);
   } catch (error) {
     console.log("Email sending error:", error);
     throw new Error("Email sending failed");
@@ -188,8 +187,7 @@ const sendResetPasswordEmail = async (email, username, token) => {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Verification email sent:", info.messageId);
+    await transporter.sendMail(mailOptions);
   } catch (error) {
     console.log("Email sending error:", error);
     throw new Error("Email sending failed");

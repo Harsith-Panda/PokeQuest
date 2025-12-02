@@ -6,14 +6,30 @@ import {
   Users,
   Trophy,
   ArrowRight,
-  Sparkles,
-  Target,
-  Globe,
+  Gamepad2Icon,
   Mail,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import AuthLoading from "./components/AuthLoading";
 
 export default function Home() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      router.push("/app/map");
+    }
+    setIsLoading(false);
+  }, [router]);
+
+  if (isLoading) {
+    return <AuthLoading variant="full" />;
+  }
   return (
     <div className="min-h-screen">
       <LandingNavbar />
@@ -44,12 +60,6 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-surface backdrop-blur-sm rounded-full border border-border shadow-lg">
-            <Sparkles className="w-4 h-4 text-accent" />
-            <span className="text-sm font-medium text-text-primary">
-              Join 50,000+ Trainers Worldwide
-            </span>
-          </div>
 
           {/* Main Heading */}
           <h1 className="font-logo text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-text-primary mb-4 sm:mb-6 leading-tight px-4">
@@ -70,7 +80,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4 mb-12 sm:mb-16">
             <Link
               href="/signup"
-              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 bg-accent hover:bg-accent-secondary text-white rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95"
+              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-8 py-4 bg-accent hover:bg-accent-secondary text-black rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95"
             >
               Start Adventure
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -86,8 +96,8 @@ export default function Home() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 px-4 max-w-5xl mx-auto">
             {[
-              { label: "Active Players", value: "50K+" },
-              { label: "Pokémon Caught", value: "2M+" },
+              { label: "Active Players", value: "50+" },
+              { label: "Pokémons", value: "30+" },
               { label: "Cities", value: "100+" },
               { label: "Daily Spawns", value: "10K+" },
             ].map((stat, i) => (
@@ -114,12 +124,6 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 bg-hover rounded-full border border-border">
-              <Sparkles className="w-4 h-4 text-accent" />
-              <span className="text-sm font-medium text-text-primary">
-                Features
-              </span>
-            </div>
             <h2 className="font-logo text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-4">
               Epic Features
             </h2>
@@ -182,12 +186,6 @@ export default function Home() {
       <section className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 bg-hover">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 bg-surface backdrop-blur-sm rounded-full border border-border">
-              <Target className="w-4 h-4 text-accent" />
-              <span className="text-sm font-medium text-text-primary">
-                Getting Started
-              </span>
-            </div>
             <h2 className="font-logo text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-4">
               How It Works
             </h2>
@@ -203,30 +201,25 @@ export default function Home() {
                 step: "01",
                 title: "Sign Up",
                 desc: "Create your trainer account and customize your profile",
-                icon: "🎮",
               },
               {
                 step: "02",
                 title: "Explore",
                 desc: "Open the map and discover Pokémon spawns near you",
-                icon: "🗺️",
               },
               {
                 step: "03",
                 title: "Catch",
                 desc: "Tap to catch Pokémon and build your collection",
-                icon: "⚡",
               },
             ].map((item, i) => (
               <div
                 key={i}
                 className="relative bg-surface rounded-2xl p-8 shadow-xl border-2 border-border hover:border-accent transition-all hover:scale-105"
               >
-                <div className="absolute -top-6 left-8 w-12 h-12 bg-accent text-white font-bold rounded-full flex items-center justify-center text-lg shadow-lg">
+                <div className="absolute -top-6 left-8 w-12 h-12 bg-accent text-black font-bold rounded-full flex items-center justify-center text-lg shadow-lg">
                   {i + 1}
                 </div>
-
-                <div className="text-5xl mb-4 mt-4">{item.icon}</div>
 
                 <h3 className="font-accents text-2xl text-text-primary mb-3">
                   {item.title}
@@ -244,15 +237,6 @@ export default function Home() {
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 bg-hover rounded-full border border-border">
-              <Trophy
-                className="w-4 h-4"
-                style={{ color: "var(--color-accent-tertiary)" }}
-              />
-              <span className="text-sm font-medium text-text-primary">
-                Top Trainers
-              </span>
-            </div>
             <h2 className="font-logo text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-4">
               Global Leaderboard
             </h2>
@@ -329,17 +313,11 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 bg-white/20 backdrop-blur-sm rounded-full border border-white/30">
-            <Globe className="w-4 h-4 text-white" />
-            <span className="text-sm font-medium text-white">
-              Available Worldwide
-            </span>
-          </div>
 
-          <h2 className="font-logo text-3xl sm:text-4xl lg:text-5xl text-white mb-6">
+          <h2 className="font-logo text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-6">
             Ready to Start?
           </h2>
-          <p className="font-body text-lg sm:text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+          <p className="font-body text-lg sm:text-xl text-text-primary/90 mb-10 max-w-2xl mx-auto">
             Join thousands of trainers and start your Pokémon adventure today.
             {"It's free to play!"}
           </p>
@@ -347,7 +325,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/signup"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-gray-100 text-text-primary rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border-2 border-accent hover:bg-accent text-bg rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95"
             >
               Create Account
               <ArrowRight className="w-5 h-5" />
@@ -377,8 +355,8 @@ export default function Home() {
             }
           </p>
           <Link
-            href="mailto:support@pokequest.com"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-accent hover:bg-accent-secondary text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+            href="mailto:harsithsappgarage@gmail.com"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-accent hover:bg-accent-secondary text-black rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
           >
             <Mail className="w-5 h-5" />
             Contact Us
@@ -391,8 +369,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="font-logo text-accent text-lg">PokeQuest</div>
-            <div className="text-sm text-text-secondary text-center">
-              {"© 2024 PokeQuest. All rights reserved. Gotta catch 'em all!"}
+            <div>
+              <div className="text-sm text-text-secondary text-center">
+                {"© 2024 PokeQuest. All rights reserved. Gotta catch 'em all!"}
+              </div>
+              <div className="text-sm text-text-secondary text-center">
+                {"Developed with ❤️ by Harsith Priyan S"}
+              </div>
             </div>
             <div className="flex gap-6">
               <Link

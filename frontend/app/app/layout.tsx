@@ -1,4 +1,5 @@
 import AuthWrapper from "../components/AuthWrapper";
+import "leaflet/dist/leaflet.css";
 
 export default async function AppLayout({
   children,

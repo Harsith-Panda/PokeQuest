@@ -11,18 +11,15 @@ const inventorySchema = mongoose.Schema(
       {
         pokemonTypeId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "PokemonType",
+          ref: "Pokemon",
         },
         capturedAt: { type: Date, default: Date.now },
-        stats: {
-          // optional if you want custom stats for captured mon
-        },
       },
     ],
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 module.exports = mongoose.model("Inventory", inventorySchema);

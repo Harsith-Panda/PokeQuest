@@ -1,4 +1,3 @@
-// components/AuthLoading.tsx
 "use client";
 import { Zap, Loader2 } from "lucide-react";
 
