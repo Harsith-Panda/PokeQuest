@@ -48,7 +48,7 @@ Future updates will include:
 
 ##  🌍 Access the App
 
-👉 Visit: Not hosted Yet!!
+👉 Visit: https://poke-quest-web.vercel.app/
 
 ## 🎮 Features
 
