@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MapComponent from "@/app/components/MapComponent";
 import AppNavbar from "@/app/components/AppNavbar";
 import { useStore } from "@/app/utils/store/store";
@@ -119,14 +119,55 @@ function formatDistance(meters: number): string {
   return `${(meters / 1000).toFixed(1)}km`;
 }
 
+// helper
+function hasMovedEnough(oldLat: number, oldLng: number, newLat: number, newLng: number) {
+  const dist = calculateDistance(oldLat, oldLng, newLat, newLng);
+  return dist > 25; // update if moved > 25m
+}
+
 export default function PokeQuestMapPage() {
   const { setSpawns } = useStore();
   const { user } = useStore();
   const { location, permissionState } = useLocationTracker();
+  const lastSentRef = useRef({
+    lat: 0,
+    lng: 0,
+    time: 0,
+  });
 
   const [nearbyPokemon, setNearbyPokemon] = useState<Spawn[]>([]);
 
+  async function updateLocationToServer(lat: number, lng: number) {
+    const now = Date.now();
+
+    // throttle by time (20 sec)
+    if (now - lastSentRef.current.time < 20_000) return;
+
+    // throttle by distance
+    if (
+      !hasMovedEnough(lastSentRef.current.lat, lastSentRef.current.lng, lat, lng)
+    ) {
+      return;
+    }
+
+    lastSentRef.current = { lat, lng, time: now };
+
+    try {
+      await api.put("/api/user/update-location", {
+        latitude: lat,
+        longitude: lng,
+      });
+      console.log("Location synced to DB");
+    } catch (e) {
+      console.log("Failed updating location", e);
+    }
+  }
+
   useEffect(() => {
+    if (!location || permissionState !== "granted") return;
+
+    updateLocationToServer(location.latitude, location.longitude);
+
     if (location && permissionState === "granted") {
 
       const fetchSpawns = async () => {
