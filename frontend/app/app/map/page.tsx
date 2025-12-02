@@ -131,6 +131,7 @@ export default function PokeQuestMapPage() {
 
       const fetchSpawns = async () => {
         try {
+          console.log("Fetching spawns for location:", location);
           const response = await api.get("/api/spawn/user-spawns", {
             params: {
               latitude: location.latitude,
