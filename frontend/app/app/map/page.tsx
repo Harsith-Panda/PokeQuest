@@ -188,8 +188,8 @@ export default function PokeQuestMapPage() {
       const loadSpawns = async () => {
         try {
           await api.put("/api/user/update-location", {
-            latitude: location.latitude,
-            longitude: location.longitude,
+            id: user?._id,
+            location: [location.longitude, location.latitude]
           });
           const { data } = await api.get("/api/spawn/generate-spawns");
         } catch (error) {
