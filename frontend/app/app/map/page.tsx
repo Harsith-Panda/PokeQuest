@@ -138,6 +138,7 @@ export default function PokeQuestMapPage() {
               longitude: location.longitude,
             },
           });
+          console.log("API response:", response.data);
           setSpawns(response.data.spawns);
           setNearbyPokemon(response.data.spawns);
         } catch (error) {
