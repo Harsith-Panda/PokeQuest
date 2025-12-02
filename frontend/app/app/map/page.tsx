@@ -166,8 +166,6 @@ export default function PokeQuestMapPage() {
   useEffect(() => {
     if (!location || permissionState !== "granted") return;
 
-    updateLocationToServer(location.latitude, location.longitude);
-
     if (location && permissionState === "granted") {
 
       const fetchSpawns = async () => {
@@ -189,6 +187,10 @@ export default function PokeQuestMapPage() {
 
       const loadSpawns = async () => {
         try {
+          await api.put("/api/user/update-location", {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          });
           const { data } = await api.get("/api/spawn/generate-spawns");
         } catch (error) {
           console.error("Failed to load spawns", error);
