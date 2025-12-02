@@ -3,6 +3,14 @@ import { Providers } from "./components/Providers";
 import { Inter, Kanit, Orbitron, Press_Start_2P } from "next/font/google";
 import { cookies } from "next/headers";
 
+export const metadata = {
+  icons: {
+    icon: "/favicon.ico",
+  },
+  title: "PokeQuest | Welcome to the Virtual World of Pokémon",
+  description: "Run and explore the world to catch Pokémon!",
+};
+
 export function checkCookie() {
   const cookieStore = cookies();
   console.log("Token:", cookieStore);
